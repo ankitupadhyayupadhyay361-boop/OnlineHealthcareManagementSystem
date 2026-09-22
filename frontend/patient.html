@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Patient Dashboard - MediCare</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        .sidebar {
+            width: 280px;
+            background: #0f172a;
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo h2 {
+            margin: 0;
+            color: #2563eb;
+            font-size: 28px;
+        }
+
+        .panel-name {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 35px;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-menu a {
+            text-decoration: none;
+            color: #cbd5e1;
+            padding: 15px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .logout a {
+            color: #fca5a5;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================== */
+
+        .main-content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            padding: 30px;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================== */
+
+        .topbar {
+            background: white;
+            border-radius: 14px;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-details strong {
+            display: block;
+            font-size: 17px;
+        }
+
+        .user-details span {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* =========================
+           WELCOME
+        ========================== */
+
+        .welcome-card {
+            background: #2563eb;
+            color: white;
+            padding: 40px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .welcome-card h2 {
+            font-size: 32px;
+            margin: 0 0 12px;
+        }
+
+        .welcome-card p {
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .primary-button {
+            display: inline-block;
+            background: white;
+            color: #2563eb;
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .primary-button:hover {
+            background: #f1f5f9;
+        }
+
+        /* =========================
+           STATS
+        ========================== */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .stat-card .icon {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            margin: 0 0 8px;
+        }
+
+        .stat-card p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* =========================
+           CONTENT GRID
+        ========================== */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .view-all {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* =========================
+           DOCTORS
+        ========================== */
+
+        .doctor-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .doctor-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .doctor-info h3 {
+            margin: 0 0 7px;
+        }
+
+        .doctor-info p {
+            margin: 3px 0;
+            color: #64748b;
+        }
+
+        .available {
+            color: #16a34a !important;
+            font-weight: bold;
+        }
+
+        .book-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .book-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           APPOINTMENTS
+        ========================== */
+
+        .appointment-item {
+            border: 1px solid #e2e8f0;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .appointment-item h3 {
+            margin: 0 0 8px;
+        }
+
+        .appointment-item p {
+            margin: 5px 0;
+            color: #64748b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .status-confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           QUICK ACTIONS
+        ========================== */
+
+        .quick-action {
+            display: block;
+            text-decoration: none;
+            color: #172033;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+
+        .quick-action:hover {
+            border-color: #2563eb;
+            background: #f8fbff;
+        }
+
+        .quick-action strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .quick-action span {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                width: calc(100% - 220px);
+                padding: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .doctor-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>🏥 MediCare</h2>
+
+        </div>
+
+        <div class="panel-name">
+            Patient Panel
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a
+                href="patient.html"
+                class="active"
+            >
+                🏠 Dashboard
+            </a>
+
+            <a href="appointments.html">
+                📅 My Appointments
+            </a>
+
+            <a href="#doctors">
+                👨‍⚕️ Find Doctor
+            </a>
+
+            <a href="#medical-history">
+                📋 Medical History
+            </a>
+
+            <a href="profile.html">
+                👤 My Profile
+            </a>
+
+        </nav>
+
+
+        <div class="logout">
+
+            <a
+                href="#"
+                onclick="logout()"
+            >
+                ↪ Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Patient Dashboard
+                </h1>
+
+                <p
+                    style="color:#64748b;"
+                >
+                    Manage your appointments and health records
+                </p>
+
+            </div>
+
+
+            <div class="user-info">
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    U
+                </div>
+
+
+                <div class="user-details">
+
+                    <strong id="userName">
+                        Patient
+                    </strong>
+
+                    <span id="userRole">
+                        PATIENT
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome-card">
+
+            <h2 id="welcomeMessage">
+                Welcome back! 👋
+            </h2>
+
+            <p>
+                Manage your appointments, find doctors
+                and keep track of your healthcare information.
+            </p>
+
+            <a
+                href="#doctors"
+                class="primary-button"
+            >
+                Find a Doctor
+            </a>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    📅
+                </div>
+
+                <h3 id="totalAppointments">
+                    0
+                </h3>
+
+                <p>
+                    Total Appointments
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    👨‍⚕️
+                </div>
+
+                <h3 id="availableDoctors">
+                    0
+                </h3>
+
+                <p>
+                    Available Doctors
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    📋
+                </div>
+
+                <h3 id="medicalRecords">
+                    0
+                </h3>
+
+                <p>
+                    Medical Records
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    💊
+                </div>
+
+                <h3 id="prescriptions">
+                    0
+                </h3>
+
+                <p>
+                    Prescriptions
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- CONTENT GRID -->
+
+        <div class="content-grid">
+
+
+            <!-- LEFT SIDE -->
+
+            <div>
+
+
+                <!-- DOCTORS -->
+
+                <div
+                    class="card"
+                    id="doctors"
+                >
+
+                    <div class="card-header">
+
+                        <h2>
+                            Find a Doctor
+                        </h2>
+
+                        <a
+                            href="#doctors"
+                            class="view-all"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    <div id="doctorList">
+
+                        <div class="loading">
+                            Loading doctors...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- APPOINTMENTS -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+                            Upcoming Appointments
+                        </h2>
+
+                        <a
+                            href="appointments.html"
+                            class="view-all"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    <div id="appointmentList">
+
+                        <div class="loading">
+                            Loading appointments...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MEDICAL HISTORY -->
+
+                <div
+                    class="card"
+                    id="medical-history"
+                >
+
+                    <div class="card-header">
+
+                        <h2>
+                            Medical History
+                        </h2>
+
+                    </div>
+
+
+                    <div id="medicalHistory">
+
+                        <div class="loading">
+                            Loading medical records...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                    </div>
+
+
+                    <a
+                        href="appointments.html"
+                        class="quick-action"
+                    >
+
+                        <strong>
+                            📅 Book Appointment
+                        </strong>
+
+                        <span>
+                            Schedule a visit with a doctor
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#doctors"
+                        class="quick-action"
+                    >
+
+                        <strong>
+                            👨‍⚕️ Find Doctor
+                        </strong>
+
+                        <span>
+                            View available doctors
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#medical-history"
+                        class="quick-action"
+                    >
+
+                        <strong>
+                            📋 Medical History
+                        </strong>
+
+                        <span>
+                            View your medical records
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="profile.html"
+                        class="quick-action"
+                    >
+
+                        <strong>
+                            👤 Update Profile
+                        </strong>
+
+                        <span>
+                            Manage your account information
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- HEALTH SUMMARY -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+                            Health Summary
+                        </h2>
+
+                    </div>
+
+
+                    <p>
+                        <strong>
+                            Blood Group:
+                        </strong>
+
+                        <span id="bloodGroup">
+                            Not available
+                        </span>
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Patient ID:
+                        </strong>
+
+                        <span id="patientId">
+                            -
+                        </span>
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Account Role:
+                        </strong>
+
+                        <span id="accountRole">
+                            PATIENT
+                        </span>
+                    </p>
+
+                </div>
+
+
+                <!-- HELP -->
+
+                <div class="card">
+
+                    <h2>
+                        Need Help?
+                    </h2>
+
+                    <p
+                        style="color:#64748b; line-height:1.6;"
+                    >
+                        If you have any issue with appointments
+                        or your account, contact MediCare support.
+                    </p>
+
+                    <button
+                        class="book-button"
+                        onclick="contactSupport()"
+                    >
+                        Contact Support
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /*
+     * ================================
+     * API URLs
+     * ================================
+     */
+
+    const DOCTOR_API =
+        "http://localhost:8080/api/doctors";
+
+    const APPOINTMENT_API =
+        "http://localhost:8080/api/appointments";
+
+    const MEDICAL_RECORD_API =
+        "http://localhost:8080/api/medical-records";
+
+
+    /*
+     * ================================
+     * Logged-in user
+     * ================================
+     */
+
+    let loggedInUser =
+        JSON.parse(
+            localStorage.getItem("loggedInUser")
+        );
+
+
+    /*
+     * Agar user login nahi hai
+     * to login page par bhej denge.
+     */
+
+    if (!loggedInUser) {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    /*
+     * ================================
+     * Page load
+     * ================================
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            loadUserData();
+
+            loadDoctors();
+
+            loadAppointments();
+
+            loadMedicalRecords();
+
+        }
+    );
+
+
+    /*
+     * ================================
+     * USER DATA
+     * ================================
+     */
+
+    function loadUserData() {
+
+        if (!loggedInUser) {
+            return;
+        }
+
+
+        const name =
+            loggedInUser.name || "Patient";
+
+
+        const role =
+            String(
+                loggedInUser.role || "PATIENT"
+            ).toUpperCase();
+
+
+        const userId =
+            loggedInUser.id || "-";
+
+
+        document.getElementById(
+            "userName"
+        ).textContent = name;
+
+
+        document.getElementById(
+            "welcomeMessage"
+        ).textContent =
+            "Welcome back, " + name + "! 👋";
+
+
+        document.getElementById(
+            "userRole"
+        ).textContent = role;
+
+
+        document.getElementById(
+            "accountRole"
+        ).textContent = role;
+
+
+        document.getElementById(
+            "patientId"
+        ).textContent = userId;
+
+
+        /*
+         * Initials generate karenge.
+         */
+
+        const words =
+            name.trim().split(" ");
+
+
+        let initials = "";
+
+
+        if (words.length >= 2) {
+
+            initials =
+                words[0].charAt(0) +
+                words[1].charAt(0);
+
+        } else {
+
+            initials =
+                name.substring(0, 2);
+
+        }
+
+
+        document.getElementById(
+            "userAvatar"
+        ).textContent =
+            initials.toUpperCase();
+
+    }
+
+
+    /*
+     * ================================
+     * LOAD DOCTORS
+     * ================================
+     */
+
+    async function loadDoctors() {
+
+        const doctorList =
+            document.getElementById(
+                "doctorList"
+            );
+
+
+        try {
+
+            const response =
+                await fetch(DOCTOR_API);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load doctors"
+                );
+
+            }
+
+
+            const doctors =
+                await response.json();
+
+
+            /*
+             * Available doctors count
+             */
+
+            const available =
+                doctors.filter(
+                    doctor =>
+                        doctor.available === true
+                );
+
+
+            document.getElementById(
+                "availableDoctors"
+            ).textContent =
+                available.length;
+
+
+            /*
+             * No doctors
+             */
+
+            if (doctors.length === 0) {
+
+                doctorList.innerHTML = `
+                    <div class="empty">
+                        No doctors found.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            /*
+             * Sirf first 3 doctors
+             * dashboard par show karenge.
+             */
+
+            const doctorsToShow =
+                doctors.slice(0, 3);
+
+
+            doctorList.innerHTML =
+                doctorsToShow.map(
+                    doctor => {
+
+
+                        const initials =
+                            doctor.name
+                                ? doctor.name
+                                    .replace("Dr. ", "")
+                                    .split(" ")
+                                    .map(
+                                        word =>
+                                            word.charAt(0)
+                                    )
+                                    .join("")
+                                    .substring(0, 2)
+                                    .toUpperCase()
+                                : "DR";
+
+
+                        const availability =
+                            doctor.available === true
+                                ? "Available"
+                                : "Not Available";
+
+
+                        return `
+
+                            <div class="doctor-card">
+
+                                <div class="doctor-info">
+
+                                    <div class="doctor-avatar">
+                                        ${initials}
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            ${doctor.name || "Doctor"}
+                                        </h3>
+
+                                        <p>
+                                            ${doctor.specialization || "General Physician"}
+                                        </p>
+
+                                        <p>
+                                            ${doctor.qualification || "Medical Professional"}
+                                        </p>
+
+                                        <p class="${
+                                            doctor.available
+                                                ? "available"
+                                                : ""
+                                        }">
+                                            ${availability}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <button
+                                    class="book-button"
+                                    onclick="bookDoctor(${doctor.id})"
+                                    ${
+                                        doctor.available
+                                            ? ""
+                                            : "disabled"
+                                    }
+                                >
+                                    Book Appointment
+                                </button>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+
+        } catch (error) {
+
+            console.error(
+                "Doctor API Error:",
+                error
+            );
+
+
+            doctorList.innerHTML = `
+
+                <div class="empty">
+
+                    Unable to load doctors.
+
+                    <br>
+
+                    Please make sure the backend server
+                    is running.
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ================================
+     * LOAD APPOINTMENTS
+     * ================================
+     */
+
+    async function loadAppointments() {
+
+        const appointmentList =
+            document.getElementById(
+                "appointmentList"
+            );
+
+
+        if (!loggedInUser) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    APPOINTMENT_API
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load appointments"
+                );
+
+            }
+
+
+            const appointments =
+                await response.json();
+
+
+            /*
+             * Patient ke appointments
+             * filter karenge.
+             *
+             * patientId ya patientName
+             * dono support karenge.
+             */
+
+            const patientAppointments =
+                appointments.filter(
+                    appointment => {
+
+                        if (
+                            appointment.patientId &&
+                            loggedInUser.id
+                        ) {
+
+                            return (
+                                Number(
+                                    appointment.patientId
+                                ) === Number(
+                                    loggedInUser.id
+                                )
+                            );
+
+                        }
+
+
+                        return (
+                            appointment.patientName ===
+                            loggedInUser.name
+                        );
+
+                    }
+                );
+
+
+            /*
+             * Total appointment count
+             */
+
+            document.getElementById(
+                "totalAppointments"
+            ).textContent =
+                patientAppointments.length;
+
+
+            /*
+             * Sirf upcoming/pending/
+             * confirmed appointments
+             */
+
+            const upcoming =
+                patientAppointments.filter(
+                    appointment => {
+
+                        const status =
+                            String(
+                                appointment.status || ""
+                            ).toUpperCase();
+
+
+                        return (
+                            status === "PENDING" ||
+                            status === "CONFIRMED"
+                        );
+
+                    }
+                );
+
+
+            /*
+             * No appointments
+             */
+
+            if (upcoming.length === 0) {
+
+                appointmentList.innerHTML = `
+
+                    <div class="empty">
+
+                        No upcoming appointments.
+
+                        <br><br>
+
+                        <a
+                            href="appointments.html"
+                            class="view-all"
+                        >
+                            Book an Appointment
+                        </a>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            /*
+             * First 5 appointments
+             */
+
+            appointmentList.innerHTML =
+                upcoming
+                    .slice(0, 5)
+                    .map(
+                        appointment => {
+
+
+                            const status =
+                                String(
+                                    appointment.status ||
+                                    "PENDING"
+                                ).toUpperCase();
+
+
+                            let statusClass =
+                                "status-pending";
+
+
+                            if (
+                                status ===
+                                "CONFIRMED"
+                            ) {
+
+                                statusClass =
+                                    "status-confirmed";
+
+                            }
+
+                            else if (
+                                status ===
+                                "COMPLETED"
+                            ) {
+
+                                statusClass =
+                                    "status-completed";
+
+                            }
+
+                            else if (
+                                status ===
+                                "REJECTED"
+                            ) {
+
+                                statusClass =
+                                    "status-rejected";
+
+                            }
+
+
+                            return `
+
+                                <div class="appointment-item">
+
+                                    <h3>
+                                        ${
+                                            appointment.doctorName ||
+                                            "Doctor"
+                                        }
+                                    </h3>
+
+                                    <p>
+                                        📅 ${
+                                            appointment.appointmentDate ||
+                                            "-"
+                                        }
+                                    </p>
+
+                                    <p>
+                                        🕐 ${
+                                            appointment.appointmentTime ||
+                                            "-"
+                                        }
+                                    </p>
+
+                                    <p>
+                                        📋 ${
+                                            appointment.appointmentType ||
+                                            "Consultation"
+                                        }
+                                    </p>
+
+                                    <span
+                                        class="status ${statusClass}"
+                                    >
+                                        ${status}
+                                    </span>
+
+                                </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+
+        } catch (error) {
+
+            console.error(
+                "Appointment API Error:",
+                error
+            );
+
+
+            appointmentList.innerHTML = `
+
+                <div class="empty">
+
+                    Unable to load appointments.
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ================================
+     * LOAD MEDICAL RECORDS
+     * ================================
+     */
+
+    async function loadMedicalRecords() {
+
+        const history =
+            document.getElementById(
+                "medicalHistory"
+            );
+
+
+        if (!loggedInUser) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    MEDICAL_RECORD_API +
+                    "/patient-id/" +
+                    loggedInUser.id
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load records"
+                );
+
+            }
+
+
+            const records =
+                await response.json();
+
+
+            /*
+             * Medical record count
+             */
+
+            document.getElementById(
+                "medicalRecords"
+            ).textContent =
+                records.length;
+
+
+            /*
+             * Prescription count
+             */
+
+            const prescriptions =
+                records.filter(
+                    record =>
+                        record.prescription &&
+                        record.prescription.trim() !== ""
+                );
+
+
+            document.getElementById(
+                "prescriptions"
+            ).textContent =
+                prescriptions.length;
+
+
+            /*
+             * No records
+             */
+
+            if (records.length === 0) {
+
+                history.innerHTML = `
+
+                    <div class="empty">
+
+                        No medical records found.
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            /*
+             * Recent records
+             */
+
+            history.innerHTML =
+                records
+                    .slice(0, 5)
+                    .map(
+                        record => `
+
+                            <div
+                                class="appointment-item"
+                            >
+
+                                <h3>
+                                    ${
+                                        record.diagnosis ||
+                                        "Medical Record"
+                                    }
+                                </h3>
+
+                                <p>
+                                    👨‍⚕️ Doctor:
+                                    ${
+                                        record.doctorName ||
+                                        "Doctor"
+                                    }
+                                </p>
+
+                                <p>
+                                    📅 Date:
+                                    ${
+                                        record.recordDate ||
+                                        "-"
+                                    }
+                                </p>
+
+                                <p>
+                                    💊 Treatment:
+                                    ${
+                                        record.treatment ||
+                                        "Not available"
+                                    }
+                                </p>
+
+                                <p>
+                                    💊 Prescription:
+                                    ${
+                                        record.prescription ||
+                                        "No prescription"
+                                    }
+                                </p>
+
+                            </div>
+
+                        `
+                    )
+                    .join("");
+
+
+        } catch (error) {
+
+            console.error(
+                "Medical Record API Error:",
+                error
+            );
+
+
+            document.getElementById(
+                "medicalRecords"
+            ).textContent = "0";
+
+
+            document.getElementById(
+                "prescriptions"
+            ).textContent = "0";
+
+
+            history.innerHTML = `
+
+                <div class="empty">
+
+                    No medical records available.
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ================================
+     * BOOK DOCTOR
+     * ================================
+     */
+
+    function bookDoctor(doctorId) {
+
+        localStorage.setItem(
+            "selectedDoctorId",
+            doctorId
+        );
+
+
+        window.location.href =
+            "appointments.html";
+
+    }
+
+
+    /*
+     * ================================
+     * CONTACT SUPPORT
+     * ================================
+     */
+
+    function contactSupport() {
+
+        alert(
+            "MediCare Support: support@medicare.com"
+        );
+
+    }
+
+
+    /*
+     * ================================
+     * LOGOUT
+     * ================================
+     */
+
+    function logout() {
+
+        localStorage.removeItem(
+            "loggedInUser"
+        );
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

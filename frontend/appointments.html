@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Appointments - MediCare</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .page {
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .header {
+            background: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            color: #2563eb;
+            font-size: 25px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-name {
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .back-button {
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        .page-title p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        /* =========================
+           GRID
+        ========================== */
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        /* =========================
+           FORM
+        ========================== */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .submit-button {
+            width: 100%;
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background: #1d4ed8;
+        }
+
+        .submit-button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* =========================
+           MESSAGE
+        ========================== */
+
+        .message {
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           APPOINTMENTS
+        ========================== */
+
+        .appointment-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .appointment-header h3 {
+            margin: 0 0 7px;
+        }
+
+        .appointment-header p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .appointment-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .detail strong {
+            color: #172033;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-cancelled {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .cancel-button {
+            border: none;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cancel-button:hover {
+            background: #fecaca;
+        }
+
+        .cancel-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading,
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 850px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+        }
+
+        @media (max-width: 550px) {
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .appointment-header {
+                flex-direction: column;
+            }
+
+            .appointment-details {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="header">
+
+        <a
+            href="patient.html"
+            class="logo"
+        >
+            🏥 MediCare
+        </a>
+
+
+        <div class="header-right">
+
+            <span
+                class="user-name"
+                id="userName"
+            >
+                Patient
+            </span>
+
+            <a
+                href="patient.html"
+                class="back-button"
+            >
+                ← Dashboard
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="container">
+
+
+        <div class="page-title">
+
+            <h1>
+                My Appointments
+            </h1>
+
+            <p>
+                Book and manage your healthcare appointments.
+            </p>
+
+        </div>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <div class="grid">
+
+
+            <!-- =====================
+                 BOOK APPOINTMENT
+            ====================== -->
+
+            <div class="card">
+
+                <h2>
+                    📅 Book Appointment
+                </h2>
+
+
+                <form id="appointmentForm">
+
+
+                    <div class="form-group">
+
+                        <label for="doctor">
+                            Select Doctor
+                        </label>
+
+                        <select
+                            id="doctor"
+                            required
+                        >
+
+                            <option value="">
+                                Loading doctors...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="appointmentType">
+                            Appointment Type
+                        </label>
+
+                        <select
+                            id="appointmentType"
+                            required
+                        >
+
+                            <option value="">
+                                Select Type
+                            </option>
+
+                            <option value="General Consultation">
+                                General Consultation
+                            </option>
+
+                            <option value="Follow-up">
+                                Follow-up
+                            </option>
+
+                            <option value="Emergency">
+                                Emergency
+                            </option>
+
+                            <option value="Online Consultation">
+                                Online Consultation
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="appointmentDate">
+                            Appointment Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="appointmentDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="appointmentTime">
+                            Appointment Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="appointmentTime"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="reason">
+                            Reason
+                        </label>
+
+                        <textarea
+                            id="reason"
+                            placeholder="Describe your reason for consultation..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="submit-button"
+                        id="bookButton"
+                    >
+                        Book Appointment
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+            <!-- =====================
+                 EXISTING APPOINTMENTS
+            ====================== -->
+
+            <div class="card">
+
+                <h2>
+                    📋 My Appointments
+                </h2>
+
+
+                <div id="appointmentList">
+
+                    <div class="loading">
+                        Loading appointments...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<script>
+
+    /*
+     * ================================
+     * API
+     * ================================
+     */
+
+    const DOCTOR_API =
+        "http://localhost:8080/api/doctors";
+
+
+    const APPOINTMENT_API =
+        "http://localhost:8080/api/appointments";
+
+
+    /*
+     * ================================
+     * Logged-in User
+     * ================================
+     */
+
+    const loggedInUser =
+        JSON.parse(
+            localStorage.getItem("loggedInUser")
+        );
+
+
+    /*
+     * Login check
+     */
+
+    if (!loggedInUser) {
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+    /*
+     * ================================
+     * DOM Elements
+     * ================================
+     */
+
+    const doctorSelect =
+        document.getElementById("doctor");
+
+
+    const appointmentForm =
+        document.getElementById(
+            "appointmentForm"
+        );
+
+
+    const appointmentList =
+        document.getElementById(
+            "appointmentList"
+        );
+
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    const bookButton =
+        document.getElementById(
+            "bookButton"
+        );
+
+
+    /*
+     * ================================
+     * PAGE LOAD
+     * ================================
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            if (loggedInUser) {
+
+                document.getElementById(
+                    "userName"
+                ).textContent =
+                    loggedInUser.name ||
+                    "Patient";
+
+            }
+
+
+            /*
+             * Minimum date = today
+             */
+
+            const today =
+                new Date()
+                    .toISOString()
+                    .split("T")[0];
+
+
+            document.getElementById(
+                "appointmentDate"
+            ).min = today;
+
+
+            loadDoctors();
+
+            loadAppointments();
+
+        }
+    );
+
+
+    /*
+     * ================================
+     * MESSAGE
+     * ================================
+     */
+
+    function showMessage(
+        text,
+        type
+    ) {
+
+        message.textContent = text;
+
+        message.className =
+            "message " + type;
+
+
+        setTimeout(
+            function() {
+
+                message.className =
+                    "message";
+
+                message.textContent =
+                    "";
+
+            },
+            4000
+        );
+
+    }
+
+
+    /*
+     * ================================
+     * LOAD DOCTORS
+     * ================================
+     */
+
+    async function loadDoctors() {
+
+        try {
+
+            const response =
+                await fetch(
+                    DOCTOR_API
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load doctors"
+                );
+
+            }
+
+
+            const doctors =
+                await response.json();
+
+
+            doctorSelect.innerHTML = `
+
+                <option value="">
+                    Select Doctor
+                </option>
+
+            `;
+
+
+            doctors.forEach(
+                function(doctor) {
+
+
+                    /*
+                     * Sirf available doctors
+                     * booking ke liye show honge.
+                     */
+
+                    if (
+                        doctor.available === true
+                    ) {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            doctor.id;
+
+
+                        option.textContent =
+                            doctor.name +
+                            " - " +
+                            (
+                                doctor.specialization ||
+                                "General"
+                            );
+
+
+                        option.dataset.name =
+                            doctor.name;
+
+
+                        doctorSelect.appendChild(
+                            option
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /*
+             * Dashboard se selected doctor
+             * aaya hai to automatically select.
+             */
+
+            const selectedDoctorId =
+                localStorage.getItem(
+                    "selectedDoctorId"
+                );
+
+
+            if (selectedDoctorId) {
+
+                doctorSelect.value =
+                    selectedDoctorId;
+
+
+                localStorage.removeItem(
+                    "selectedDoctorId"
+                );
+
+            }
+
+
+            /*
+             * Agar koi doctor available nahi.
+             */
+
+            if (
+                doctorSelect.options.length === 1
+            ) {
+
+                doctorSelect.innerHTML = `
+
+                    <option value="">
+                        No doctors available
+                    </option>
+
+                `;
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Doctor Loading Error:",
+                error
+            );
+
+
+            doctorSelect.innerHTML = `
+
+                <option value="">
+                    Unable to load doctors
+                </option>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ================================
+     * BOOK APPOINTMENT
+     * ================================
+     */
+
+    appointmentForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            if (!loggedInUser) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const doctorId =
+                doctorSelect.value;
+
+
+            const selectedOption =
+                doctorSelect.options[
+                    doctorSelect.selectedIndex
+                ];
+
+
+            const doctorName =
+                selectedOption.dataset.name ||
+                selectedOption.textContent.split(
+                    " - "
+                )[0];
+
+
+            const appointmentType =
+                document.getElementById(
+                    "appointmentType"
+                ).value;
+
+
+            const appointmentDate =
+                document.getElementById(
+                    "appointmentDate"
+                ).value;
+
+
+            const appointmentTime =
+                document.getElementById(
+                    "appointmentTime"
+                ).value;
+
+
+            const reason =
+                document.getElementById(
+                    "reason"
+                ).value.trim();
+
+
+            /*
+             * Basic validation
+             */
+
+            if (!doctorId) {
+
+                showMessage(
+                    "Please select a doctor.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!appointmentType) {
+
+                showMessage(
+                    "Please select appointment type.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!appointmentDate) {
+
+                showMessage(
+                    "Please select appointment date.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!appointmentTime) {
+
+                showMessage(
+                    "Please select appointment time.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!reason) {
+
+                showMessage(
+                    "Please enter the reason.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Button disable
+             */
+
+            bookButton.disabled = true;
+
+            bookButton.textContent =
+                "Booking...";
+
+
+            /*
+             * Appointment object
+             */
+
+            const appointment = {
+
+                doctorId:
+                    Number(doctorId),
+
+                patientId:
+                    Number(loggedInUser.id),
+
+                patientName:
+                    loggedInUser.name,
+
+                doctorName:
+                    doctorName,
+
+                appointmentDate:
+                    appointmentDate,
+
+                appointmentTime:
+                    appointmentTime,
+
+                appointmentType:
+                    appointmentType,
+
+                reason:
+                    reason,
+
+                status:
+                    "PENDING"
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        APPOINTMENT_API,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    appointment
+                                )
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Appointment booking failed"
+                    );
+
+                }
+
+
+                const savedAppointment =
+                    await response.json();
+
+
+                console.log(
+                    "Appointment Created:",
+                    savedAppointment
+                );
+
+
+                showMessage(
+                    "Appointment booked successfully!",
+                    "success"
+                );
+
+
+                /*
+                 * Form reset
+                 */
+
+                appointmentForm.reset();
+
+
+                /*
+                 * Appointments refresh
+                 */
+
+                loadAppointments();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Booking Error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Unable to book appointment. Please try again.",
+                    "error"
+                );
+
+            }
+
+
+            bookButton.disabled = false;
+
+            bookButton.textContent =
+                "Book Appointment";
+
+        }
+
+    );
+
+
+    /*
+     * ================================
+     * LOAD APPOINTMENTS
+     * ================================
+     */
+
+    async function loadAppointments() {
+
+        if (!loggedInUser) {
+            return;
+        }
+
+
+        appointmentList.innerHTML = `
+
+            <div class="loading">
+                Loading appointments...
+            </div>
+
+        `;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    APPOINTMENT_API
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load appointments"
+                );
+
+            }
+
+
+            const appointments =
+                await response.json();
+
+
+            /*
+             * Current patient ke appointments
+             */
+
+            const myAppointments =
+                appointments.filter(
+                    function(appointment) {
+
+                        if (
+                            appointment.patientId &&
+                            loggedInUser.id
+                        ) {
+
+                            return (
+                                Number(
+                                    appointment.patientId
+                                ) === Number(
+                                    loggedInUser.id
+                                )
+                            );
+
+                        }
+
+
+                        return (
+                            appointment.patientName ===
+                            loggedInUser.name
+                        );
+
+                    }
+                );
+
+
+            /*
+             * Newest first
+             */
+
+            myAppointments.sort(
+                function(a, b) {
+
+                    return (
+                        Number(b.id || 0) -
+                        Number(a.id || 0)
+                    );
+
+                }
+            );
+
+
+            if (
+                myAppointments.length === 0
+            ) {
+
+                appointmentList.innerHTML = `
+
+                    <div class="empty">
+
+                        You don't have any appointments yet.
+
+                        <br><br>
+
+                        Book your first appointment
+                        using the form.
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            appointmentList.innerHTML =
+                myAppointments.map(
+                    function(appointment) {
+
+                        const status =
+                            String(
+                                appointment.status ||
+                                "PENDING"
+                            ).toUpperCase();
+
+
+                        let statusClass =
+                            "status-pending";
+
+
+                        if (
+                            status === "CONFIRMED"
+                        ) {
+
+                            statusClass =
+                                "status-confirmed";
+
+                        }
+
+                        else if (
+                            status === "COMPLETED"
+                        ) {
+
+                            statusClass =
+                                "status-completed";
+
+                        }
+
+                        else if (
+                            status === "REJECTED"
+                        ) {
+
+                            statusClass =
+                                "status-rejected";
+
+                        }
+
+                        else if (
+                            status === "CANCELLED"
+                        ) {
+
+                            statusClass =
+                                "status-cancelled";
+
+                        }
+
+
+                        /*
+                         * Cancel button
+                         * sirf pending/confirmed
+                         * ke liye.
+                         */
+
+                        const canCancel =
+                            status === "PENDING" ||
+                            status === "CONFIRMED";
+
+
+                        return `
+
+                            <div class="appointment-card">
+
+                                <div class="appointment-header">
+
+                                    <div>
+
+                                        <h3>
+                                            ${
+                                                appointment.doctorName ||
+                                                "Doctor"
+                                            }
+                                        </h3>
+
+                                        <p>
+                                            ${
+                                                appointment.appointmentType ||
+                                                "Consultation"
+                                            }
+                                        </p>
+
+                                    </div>
+
+
+                                    <span
+                                        class="status ${statusClass}"
+                                    >
+                                        ${status}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="appointment-details">
+
+                                    <div class="detail">
+
+                                        <strong>
+                                            📅 Date:
+                                        </strong>
+
+                                        ${
+                                            appointment.appointmentDate ||
+                                            "-"
+                                        }
+
+                                    </div>
+
+
+                                    <div class="detail">
+
+                                        <strong>
+                                            🕐 Time:
+                                        </strong>
+
+                                        ${
+                                            appointment.appointmentTime ||
+                                            "-"
+                                        }
+
+                                    </div>
+
+
+                                    <div class="detail">
+
+                                        <strong>
+                                            👨‍⚕️ Doctor:
+                                        </strong>
+
+                                        ${
+                                            appointment.doctorName ||
+                                            "-"
+                                        }
+
+                                    </div>
+
+
+                                    <div class="detail">
+
+                                        <strong>
+                                            📋 Reason:
+                                        </strong>
+
+                                        ${
+                                            appointment.reason ||
+                                            "-"
+                                        }
+
+                                    </div>
+
+                                </div>
+
+
+                                ${
+                                    canCancel
+                                        ? `
+
+                                            <button
+                                                class="cancel-button"
+                                                onclick="cancelAppointment(${appointment.id})"
+                                            >
+                                                Cancel Appointment
+                                            </button>
+
+                                          `
+                                        : ""
+                                }
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+
+        } catch (error) {
+
+            console.error(
+                "Appointment Loading Error:",
+                error
+            );
+
+
+            appointmentList.innerHTML = `
+
+                <div class="empty">
+
+                    Unable to load appointments.
+
+                    <br>
+
+                    Please make sure backend is running.
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    /*
+     * ================================
+     * CANCEL APPOINTMENT
+     * ================================
+     */
+
+    async function cancelAppointment(
+        appointmentId
+    ) {
+
+        const confirmCancel =
+            confirm(
+                "Are you sure you want to cancel this appointment?"
+            );
+
+
+        if (!confirmCancel) {
+            return;
+        }
+
+
+        try {
+
+            /*
+             * Pehle appointment fetch karenge
+             * taaki existing data preserve rahe.
+             */
+
+            const getResponse =
+                await fetch(
+                    APPOINTMENT_API +
+                    "/" +
+                    appointmentId
+                );
+
+
+            if (!getResponse.ok) {
+
+                throw new Error(
+                    "Appointment not found"
+                );
+
+            }
+
+
+            const appointment =
+                await getResponse.json();
+
+
+            /*
+             * Status CANCELLED karenge.
+             */
+
+            appointment.status =
+                "CANCELLED";
+
+
+            const updateResponse =
+                await fetch(
+                    APPOINTMENT_API +
+                    "/" +
+                    appointmentId,
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                appointment
+                            )
+
+                    }
+                );
+
+
+            if (!updateResponse.ok) {
+
+                throw new Error(
+                    "Cancellation failed"
+                );
+
+            }
+
+
+            showMessage(
+                "Appointment cancelled successfully.",
+                "success"
+            );
+
+
+            loadAppointments();
+
+
+        } catch (error) {
+
+            console.error(
+                "Cancel Error:",
+                error
+            );
+
+
+            showMessage(
+                "Unable to cancel appointment.",
+                "error"
+            );
+
+        }
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

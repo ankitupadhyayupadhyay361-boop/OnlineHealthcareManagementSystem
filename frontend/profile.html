@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile - MediCare</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .header {
+            height: 82px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 45px;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2864e8;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .username {
+            font-weight: bold;
+            color: #34415c;
+        }
+
+        .dashboard-btn {
+            background: #2864e8;
+            color: white;
+            border: none;
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .dashboard-btn:hover {
+            background: #1e50c5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #61708d;
+            font-size: 17px;
+        }
+
+        .message {
+            display: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #dff7e7;
+            color: #16733a;
+        }
+
+        .error {
+            background: #ffe1e1;
+            color: #b42323;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #e5eaf0;
+            margin-bottom: 25px;
+        }
+
+        .profile-icon {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: #e8efff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        .profile-header h2 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .role {
+            display: inline-block;
+            background: #e8efff;
+            color: #2864e8;
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #26334d;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #ccd6e5;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2864e8;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .save-btn {
+            margin-top: 25px;
+            background: #2864e8;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #1e50c5;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .info-box {
+            background: #f7f9fc;
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .info-label {
+            color: #71809c;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .info-value {
+            font-weight: bold;
+            color: #26334d;
+        }
+
+        .password-note {
+            color: #71809c;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #61708d;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+
+            .header {
+                padding: 0 20px;
+            }
+
+            .username {
+                display: none;
+            }
+
+            .container {
+                margin: 25px auto;
+            }
+
+            .form-grid,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .page-title h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        🏥 MediCare
+    </div>
+
+    <div class="header-right">
+
+        <span class="username" id="headerUsername">
+            Loading...
+        </span>
+
+        <button class="dashboard-btn" onclick="goDashboard()">
+            ← Dashboard
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="page-title">
+
+        <h1>My Profile</h1>
+
+        <p>
+            View and update your personal information.
+        </p>
+
+    </div>
+
+
+    <div id="message" class="message"></div>
+
+
+    <!-- PROFILE HEADER -->
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            <div class="profile-icon">
+                👤
+            </div>
+
+            <div>
+
+                <h2 id="profileName">
+                    Loading...
+                </h2>
+
+                <span class="role" id="profileRole">
+                    Loading...
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <h3 class="section-title">
+            Personal Information
+        </h3>
+
+
+        <form id="profileForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                        placeholder="Enter phone number"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="dateOfBirth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateOfBirth"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select id="gender">
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="bloodGroup">
+                        Blood Group
+                    </label>
+
+                    <select id="bloodGroup">
+
+                        <option value="">
+                            Select Blood Group
+                        </option>
+
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="address">
+                        Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        placeholder="Enter your address"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+                Save Profile
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ACCOUNT INFORMATION -->
+
+    <div class="profile-card">
+
+        <h3 class="section-title">
+            Account Information
+        </h3>
+
+
+        <div class="info-grid">
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    User ID
+                </div>
+
+                <div
+                    class="info-value"
+                    id="userId"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Account Role
+                </div>
+
+                <div
+                    class="info-value"
+                    id="accountRole"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Email
+                </div>
+
+                <div
+                    class="info-value"
+                    id="accountEmail"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Patient ID
+                </div>
+
+                <div
+                    class="info-value"
+                    id="patientId"
+                >
+                    -
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CHANGE PASSWORD -->
+
+    <div class="profile-card">
+
+        <h3 class="section-title">
+            Change Password
+        </h3>
+
+
+        <form id="passwordForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="newPassword">
+                        New Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="newPassword"
+                        minlength="6"
+                        placeholder="Enter new password"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm New Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        minlength="6"
+                        placeholder="Confirm new password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <p class="password-note">
+                Leave both fields empty if you do not want to change your password.
+            </p>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+                Update Password
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+
+<script>
+
+const USER_API = "http://localhost:8080/api/users";
+const PATIENT_API = "http://localhost:8080/api/patients";
+
+let loggedInUser = null;
+let patientData = null;
+
+
+/* ================================
+   LOAD LOGGED IN USER
+================================ */
+
+function loadLoggedInUser() {
+
+    const savedUser = localStorage.getItem("loggedInUser");
+
+    if (!savedUser) {
+
+        alert("Please login first.");
+
+        window.location.href = "login.html";
+
+        return false;
+    }
+
+    try {
+
+        loggedInUser = JSON.parse(savedUser);
+
+    } catch (error) {
+
+        localStorage.removeItem("loggedInUser");
+
+        window.location.href = "login.html";
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* ================================
+   SHOW MESSAGE
+================================ */
+
+function showMessage(message, type) {
+
+    const messageBox = document.getElementById("message");
+
+    messageBox.textContent = message;
+
+    messageBox.className = "message " + type;
+
+    messageBox.style.display = "block";
+
+    setTimeout(() => {
+
+        messageBox.style.display = "none";
+
+    }, 4000);
+}
+
+
+/* ================================
+   LOAD PROFILE
+================================ */
+
+async function loadProfile() {
+
+    if (!loadLoggedInUser()) {
+        return;
+    }
+
+
+    document.getElementById("headerUsername").textContent =
+        loggedInUser.name || "User";
+
+
+    document.getElementById("profileName").textContent =
+        loggedInUser.name || "User";
+
+
+    document.getElementById("profileRole").textContent =
+        loggedInUser.role || "USER";
+
+
+    document.getElementById("userId").textContent =
+        loggedInUser.id || "-";
+
+
+    document.getElementById("accountRole").textContent =
+        loggedInUser.role || "-";
+
+
+    document.getElementById("accountEmail").textContent =
+        loggedInUser.email || "-";
+
+
+    document.getElementById("name").value =
+        loggedInUser.name || "";
+
+
+    document.getElementById("email").value =
+        loggedInUser.email || "";
+
+
+    try {
+
+        const userResponse = await fetch(
+            USER_API + "/" + loggedInUser.id
+        );
+
+        if (userResponse.ok) {
+
+            const user = await userResponse.json();
+
+            loggedInUser = user;
+
+            localStorage.setItem(
+                "loggedInUser",
+                JSON.stringify(user)
+            );
+
+            document.getElementById("headerUsername").textContent =
+                user.name || "User";
+
+            document.getElementById("profileName").textContent =
+                user.name || "User";
+
+            document.getElementById("profileRole").textContent =
+                user.role || "USER";
+
+            document.getElementById("name").value =
+                user.name || "";
+
+            document.getElementById("email").value =
+                user.email || "";
+
+            document.getElementById("userId").textContent =
+                user.id || "-";
+
+            document.getElementById("accountRole").textContent =
+                user.role || "-";
+
+            document.getElementById("accountEmail").textContent =
+                user.email || "";
+        }
+
+
+        /*
+         * Patient data user ID ke same ID se search kar rahe hain.
+         */
+
+        const patientResponse = await fetch(
+            PATIENT_API + "/" + loggedInUser.id
+        );
+
+        if (patientResponse.ok) {
+
+            patientData = await patientResponse.json();
+
+            document.getElementById("patientId").textContent =
+                patientData.id || "-";
+
+            document.getElementById("phone").value =
+                patientData.phone || "";
+
+            document.getElementById("dateOfBirth").value =
+                patientData.dateOfBirth || "";
+
+            document.getElementById("gender").value =
+                patientData.gender || "";
+
+            document.getElementById("bloodGroup").value =
+                patientData.bloodGroup || "";
+
+            document.getElementById("address").value =
+                patientData.address || "";
+
+        } else {
+
+            document.getElementById("patientId").textContent =
+                "Not available";
+        }
+
+    } catch (error) {
+
+        console.error("Profile loading error:", error);
+
+        showMessage(
+            "Unable to load profile data.",
+            "error"
+        );
+    }
+}
+
+
+/* ================================
+   UPDATE PROFILE
+================================ */
+
+document.getElementById("profileForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document.getElementById("name").value.trim();
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const phone =
+            document.getElementById("phone").value.trim();
+
+        const dateOfBirth =
+            document.getElementById("dateOfBirth").value;
+
+        const gender =
+            document.getElementById("gender").value;
+
+        const bloodGroup =
+            document.getElementById("bloodGroup").value;
+
+        const address =
+            document.getElementById("address").value.trim();
+
+
+        if (!name || !email) {
+
+            showMessage(
+                "Name and email are required.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        try {
+
+            /*
+             * STEP 1:
+             * Update users table
+             */
+
+            const userResponse = await fetch(
+                USER_API + "/" + loggedInUser.id,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        email: email,
+
+                        role: loggedInUser.role
+
+                    })
+                }
+            );
+
+
+            if (!userResponse.ok) {
+
+                throw new Error(
+                    "User profile update failed"
+                );
+            }
+
+
+            const updatedUser =
+                await userResponse.json();
+
+
+            /*
+             * STEP 2:
+             * Update patients table
+             */
+
+            if (patientData) {
+
+                const patientResponse = await fetch(
+                    PATIENT_API + "/" + patientData.id,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            name: name,
+
+                            email: email,
+
+                            phone: phone,
+
+                            dateOfBirth: dateOfBirth,
+
+                            gender: gender,
+
+                            address: address,
+
+                            bloodGroup: bloodGroup
+
+                        })
+                    }
+                );
+
+
+                if (!patientResponse.ok) {
+
+                    throw new Error(
+                        "Patient profile update failed"
+                    );
+                }
+
+
+                patientData =
+                    await patientResponse.json();
+            }
+
+
+            /*
+             * Save latest user in localStorage
+             */
+
+            loggedInUser = updatedUser;
+
+            localStorage.setItem(
+                "loggedInUser",
+                JSON.stringify(updatedUser)
+            );
+
+
+            document.getElementById("headerUsername").textContent =
+                updatedUser.name;
+
+            document.getElementById("profileName").textContent =
+                updatedUser.name;
+
+
+            showMessage(
+                "Profile updated successfully.",
+                "success"
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to update profile. Please try again.",
+                "error"
+            );
+        }
+    }
+);
+
+
+/* ================================
+   CHANGE PASSWORD
+================================ */
+
+document.getElementById("passwordForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const newPassword =
+            document.getElementById("newPassword").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+
+        if (!newPassword && !confirmPassword) {
+
+            showMessage(
+                "No password changes were made.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (newPassword.length < 6) {
+
+            showMessage(
+                "Password must contain at least 6 characters.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (newPassword !== confirmPassword) {
+
+            showMessage(
+                "Passwords do not match.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const response = await fetch(
+                USER_API + "/" + loggedInUser.id,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: loggedInUser.name,
+
+                        email: loggedInUser.email,
+
+                        role: loggedInUser.role,
+
+                        password: newPassword
+
+                    })
+                }
+            );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Password update failed"
+                );
+            }
+
+
+            const updatedUser =
+                await response.json();
+
+
+            loggedInUser = updatedUser;
+
+
+            localStorage.setItem(
+                "loggedInUser",
+                JSON.stringify(updatedUser)
+            );
+
+
+            document.getElementById(
+                "newPassword"
+            ).value = "";
+
+
+            document.getElementById(
+                "confirmPassword"
+            ).value = "";
+
+
+            showMessage(
+                "Password updated successfully.",
+                "success"
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to update password.",
+                "error"
+            );
+        }
+    }
+);
+
+
+/* ================================
+   DASHBOARD
+================================ */
+
+function goDashboard() {
+
+    const role =
+        String(loggedInUser.role || "")
+            .trim()
+            .toUpperCase();
+
+
+    if (role === "ADMIN") {
+
+        window.location.href = "admin.html";
+
+    } else if (role === "DOCTOR") {
+
+        window.location.href = "doctor.html";
+
+    } else {
+
+        window.location.href = "patient.html";
+    }
+}
+
+
+/* ================================
+   START
+================================ */
+
+loadProfile();
+
+</script>
+
+</body>
+</html>

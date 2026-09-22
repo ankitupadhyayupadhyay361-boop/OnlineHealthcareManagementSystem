@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MediCare | Doctor Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2a44;
+        }
+
+        .doctor-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .doctor-sidebar {
+            width: 280px;
+            background: #119b91;
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .doctor-brand {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 45px;
+            text-align: center;
+        }
+
+        .doctor-sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 16px 18px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 17px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .doctor-sidebar a:hover,
+        .doctor-sidebar a.active {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .logout-link {
+            background: #ff2635 !important;
+            margin-top: 30px;
+        }
+
+        .doctor-main {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            padding: 45px;
+            box-sizing: border-box;
+        }
+
+        .doctor-header {
+            margin-bottom: 35px;
+        }
+
+        .doctor-header h1 {
+            margin: 0 0 10px;
+            font-size: 38px;
+        }
+
+        .doctor-header p {
+            color: #64748b;
+            font-size: 18px;
+        }
+
+        .doctor-section {
+            display: none;
+        }
+
+        .doctor-section.active {
+            display: block;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .dashboard-card h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #64748b;
+        }
+
+        .dashboard-card strong {
+            font-size: 32px;
+            display: block;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 16px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f5f7fb;
+            font-size: 15px;
+        }
+
+        td {
+            color: #475569;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .status-pending {
+            background: #fff1c2;
+            color: #9a5200;
+        }
+
+        .status-confirmed {
+            background: #d9f7ef;
+            color: #087c68;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-cancelled {
+            background: #e5e7eb;
+            color: #475569;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 9px 13px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .confirm-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .reject-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .complete-btn {
+            background: #0ea5a0;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.85;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .secondary-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            margin-left: 8px;
+        }
+
+        .profile-card {
+            max-width: 750px;
+        }
+
+        .profile-row {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            padding: 14px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .profile-row strong {
+            color: #334155;
+        }
+
+        .message {
+            padding: 13px 16px;
+            margin-bottom: 20px;
+            border-radius: 9px;
+            background: #e0f2fe;
+            color: #075985;
+            display: none;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        @media (max-width: 1100px) {
+            .dashboard-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .doctor-sidebar {
+                width: 220px;
+            }
+
+            .doctor-main {
+                margin-left: 220px;
+                width: calc(100% - 220px);
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .doctor-layout {
+                display: block;
+            }
+
+            .doctor-sidebar {
+                position: relative;
+                width: 100%;
+            }
+
+            .doctor-main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="doctor-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="doctor-sidebar">
+
+        <div class="doctor-brand">
+            MediCare
+        </div>
+
+        <a href="#" class="sidebar-link active" data-section="dashboard">
+            🏠 Dashboard
+        </a>
+
+        <a href="#" class="sidebar-link" data-section="appointments">
+            📅 Appointments
+        </a>
+
+        <a href="#" class="sidebar-link" data-section="schedule">
+            🕘 My Schedule
+        </a>
+
+        <a href="#" class="sidebar-link" data-section="patients">
+            👥 Patients
+        </a>
+
+        <a href="#" class="sidebar-link" data-section="records">
+            📋 Patient Records
+        </a>
+
+        <a href="#" class="sidebar-link" data-section="profile">
+            👤 My Profile
+        </a>
+
+        <a href="#" class="logout-link" id="logoutBtn">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="doctor-main">
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="doctor-section active">
+
+            <div class="doctor-header">
+
+                <h1>
+                    Welcome, <span id="doctorWelcome">
+                        Doctor
+                    </span>
+                </h1>
+
+                <p>
+                    Manage your appointments, schedules and patients.
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-cards">
+
+                <div class="dashboard-card">
+
+                    <h3>Total Appointments</h3>
+
+                    <strong id="totalAppointments">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <h3>Pending Appointments</h3>
+
+                    <strong id="pendingAppointments">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <h3>Completed Appointments</h3>
+
+                    <strong id="completedAppointments">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <h3>Total Patients</h3>
+
+                    <strong id="totalPatients">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Doctor Information</h2>
+
+                <div id="dashboardDoctorInfo">
+                    Loading doctor information...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= APPOINTMENTS ================= -->
+
+        <section id="appointments" class="doctor-section">
+
+            <div class="doctor-header">
+
+                <h1>My Appointments</h1>
+
+                <p>
+                    View and manage your patient appointments.
+                </p>
+
+            </div>
+
+
+            <div id="appointmentMessage" class="message"></div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Patient</th>
+
+                                <th>Date</th>
+
+                                <th>Time</th>
+
+                                <th>Type</th>
+
+                                <th>Status</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="appointmentsTable">
+
+                            <tr>
+
+                                <td colspan="7" class="empty-message">
+                                    Loading appointments...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SCHEDULE ================= -->
+
+        <section id="schedule" class="doctor-section">
+
+            <div class="doctor-header">
+
+                <h1>My Schedule</h1>
+
+                <p>
+                    Manage your availability and working hours.
+                </p>
+
+            </div>
+
+
+            <div id="scheduleMessage" class="message"></div>
+
+
+            <div class="panel">
+
+                <h2 id="scheduleFormTitle">
+                    Add Schedule
+                </h2>
+
+                <form id="scheduleForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label>Schedule Date</label>
+
+                            <input
+                                type="date"
+                                id="scheduleDate"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Start Time</label>
+
+                            <input
+                                type="time"
+                                id="startTime"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>End Time</label>
+
+                            <input
+                                type="time"
+                                id="endTime"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Availability</label>
+
+                            <select id="scheduleAvailable">
+
+                                <option value="true">
+                                    Available
+                                </option>
+
+                                <option value="false">
+                                    Not Available
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                                id="scheduleSubmitBtn"
+                            >
+                                Add Schedule
+                            </button>
+
+                            <button
+                                type="button"
+                                class="secondary-btn"
+                                id="cancelScheduleEdit"
+                                style="display:none;"
+                            >
+                                Cancel Edit
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>My Schedules</h2>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Date</th>
+
+                                <th>Start</th>
+
+                                <th>End</th>
+
+                                <th>Availability</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="scheduleTable">
+
+                            <tr>
+
+                                <td colspan="6" class="empty-message">
+                                    Loading schedules...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PATIENTS ================= -->
+
+        <section id="patients" class="doctor-section">
+
+            <div class="doctor-header">
+
+                <h1>Patients</h1>
+
+                <p>
+                    View patients registered in the healthcare system.
+                </p>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Name</th>
+
+                                <th>Email</th>
+
+                                <th>Phone</th>
+
+                                <th>Gender</th>
+
+                                <th>Blood Group</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="patientsTable">
+
+                            <tr>
+
+                                <td colspan="6" class="empty-message">
+                                    Loading patients...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PATIENT RECORDS ================= -->
+
+        <section id="records" class="doctor-section">
+
+            <div class="doctor-header">
+
+                <h1>Patient Records</h1>
+
+                <p>
+                    Create and manage patient medical records.
+                </p>
+
+            </div>
+
+
+            <div id="recordMessage" class="message"></div>
+
+
+            <div class="panel">
+
+                <h2 id="recordFormTitle">
+                    Add Medical Record
+                </h2>
+
+                <form id="recordForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label>Patient ID</label>
+
+                            <input
+                                type="number"
+                                id="recordPatientId"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Patient Name</label>
+
+                            <input
+                                type="text"
+                                id="recordPatientName"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Record Date</label>
+
+                            <input
+                                type="date"
+                                id="recordDate"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Diagnosis</label>
+
+                            <input
+                                type="text"
+                                id="recordDiagnosis"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Treatment</label>
+
+                            <input
+                                type="text"
+                                id="recordTreatment"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Prescription</label>
+
+                            <input
+                                type="text"
+                                id="recordPrescription"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label>Notes</label>
+
+                            <textarea
+                                id="recordNotes"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                                id="recordSubmitBtn"
+                            >
+                                Add Medical Record
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Medical Records</h2>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Patient</th>
+
+                                <th>Date</th>
+
+                                <th>Diagnosis</th>
+
+                                <th>Treatment</th>
+
+                                <th>Prescription</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="recordsTable">
+
+                            <tr>
+
+                                <td colspan="7" class="empty-message">
+                                    Loading medical records...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROFILE ================= -->
+
+        <section id="profile" class="doctor-section">
+
+            <div class="doctor-header">
+
+                <h1>My Profile</h1>
+
+                <p>
+                    View your doctor profile information.
+                </p>
+
+            </div>
+
+
+            <div id="profileMessage" class="message"></div>
+
+
+            <div class="panel profile-card">
+
+                <div class="profile-row">
+
+                    <strong>Name</strong>
+
+                    <span id="profileName">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <strong>Email</strong>
+
+                    <span id="profileEmail">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <strong>Phone</strong>
+
+                    <span id="profilePhone">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <strong>Specialization</strong>
+
+                    <span id="profileSpecialization">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <strong>Qualification</strong>
+
+                    <span id="profileQualification">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <strong>Experience</strong>
+
+                    <span id="profileExperience">
+                        Loading...
+                    </span>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <strong>Availability</strong>
+
+                    <span id="profileAvailability">
+                        Loading...
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+const API = "http://localhost:8080/api";
+
+let loggedInUser = null;
+let currentDoctor = null;
+
+let editingScheduleId = null;
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+function loadLoggedInUser() {
+
+    const storedUser =
+        localStorage.getItem("loggedInUser");
+
+    if (!storedUser) {
+
+        alert("Please login first.");
+
+        window.location.href = "login.html";
+
+        return false;
+    }
+
+    try {
+
+        loggedInUser =
+            JSON.parse(storedUser);
+
+    } catch (error) {
+
+        localStorage.removeItem("loggedInUser");
+
+        window.location.href = "login.html";
+
+        return false;
+    }
+
+
+    if (
+        !loggedInUser ||
+        loggedInUser.role !== "DOCTOR"
+    ) {
+
+        alert("Doctor access required.");
+
+        window.location.href = "login.html";
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* =====================================================
+   SIDEBAR NAVIGATION
+===================================================== */
+
+function setupNavigation() {
+
+    const links =
+        document.querySelectorAll(".sidebar-link");
+
+    links.forEach(link => {
+
+        link.addEventListener("click", function(event) {
+
+            event.preventDefault();
+
+            const sectionId =
+                this.dataset.section;
+
+            links.forEach(item => {
+
+                item.classList.remove("active");
+
+            });
+
+            this.classList.add("active");
+
+
+            document
+                .querySelectorAll(".doctor-section")
+                .forEach(section => {
+
+                    section.classList.remove("active");
+
+                });
+
+
+            const section =
+                document.getElementById(sectionId);
+
+            if (section) {
+
+                section.classList.add("active");
+
+            }
+
+
+            if (sectionId === "appointments") {
+
+                loadAppointments();
+
+            }
+
+            if (sectionId === "schedule") {
+
+                loadSchedules();
+
+            }
+
+            if (sectionId === "patients") {
+
+                loadPatients();
+
+            }
+
+            if (sectionId === "records") {
+
+                loadMedicalRecords();
+
+            }
+
+            if (sectionId === "profile") {
+
+                loadProfile();
+
+            }
+
+        });
+
+    });
+
+}
+
+
+/* =====================================================
+   DOCTOR DATA
+===================================================== */
+
+async function loadDoctor() {
+
+    try {
+
+        const response =
+            await fetch(`${API}/doctors`);
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load doctors"
+            );
+
+        }
+
+        const doctors =
+            await response.json();
+
+
+        currentDoctor =
+            doctors.find(doctor => {
+
+                return (
+                    String(doctor.email)
+                    .toLowerCase()
+                    ===
+                    String(loggedInUser.email)
+                    .toLowerCase()
+                );
+
+            });
+
+
+        /*
+         * If login account and doctor record
+         * do not match, use the first doctor
+         * only for displaying dashboard data.
+         */
+
+        if (!currentDoctor) {
+
+            currentDoctor =
+                doctors.find(doctor => {
+
+                    return (
+                        String(doctor.name)
+                        .toLowerCase()
+                        .includes(
+                            String(loggedInUser.name)
+                            .toLowerCase()
+                        )
+                    );
+
+                });
+
+        }
+
+
+        if (!currentDoctor && doctors.length > 0) {
+
+            currentDoctor = doctors[0];
+
+        }
+
+
+        if (currentDoctor) {
+
+            document.getElementById(
+                "doctorWelcome"
+            ).textContent =
+                currentDoctor.name;
+
+
+            document.getElementById(
+                "dashboardDoctorInfo"
+            ).innerHTML = `
+
+                <p>
+                    <strong>Name:</strong>
+                    ${escapeHtml(currentDoctor.name)}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${escapeHtml(currentDoctor.email)}
+                </p>
+
+                <p>
+                    <strong>Specialization:</strong>
+                    ${escapeHtml(currentDoctor.specialization)}
+                </p>
+
+                <p>
+                    <strong>Qualification:</strong>
+                    ${escapeHtml(currentDoctor.qualification)}
+                </p>
+
+                <p>
+                    <strong>Experience:</strong>
+                    ${currentDoctor.experience} years
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    ${escapeHtml(currentDoctor.phone)}
+                </p>
+
+                <p>
+                    <strong>Availability:</strong>
+                    ${
+                        currentDoctor.available
+                        ? "Available"
+                        : "Not Available"
+                    }
+                </p>
+
+            `;
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Doctor loading error:",
+            error
+        );
+
+        document.getElementById(
+            "dashboardDoctorInfo"
+        ).textContent =
+            "Unable to load doctor information.";
+
+    }
+
+}
+
+
+/* =====================================================
+   APPOINTMENTS
+===================================================== */
+
+async function loadAppointments() {
+
+    const table =
+        document.getElementById(
+            "appointmentsTable"
+        );
+
+    table.innerHTML = `
+
+        <tr>
+
+            <td colspan="7"
+                class="empty-message">
+
+                Loading appointments...
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/appointments`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load appointments"
+            );
+
+        }
+
+
+        const appointments =
+            await response.json();
+
+
+        document.getElementById(
+            "totalAppointments"
+        ).textContent =
+            appointments.length;
+
+
+        const pending =
+            appointments.filter(
+                appointment =>
+                    appointment.status === "PENDING"
+            ).length;
+
+
+        const completed =
+            appointments.filter(
+                appointment =>
+                    appointment.status === "COMPLETED"
+            ).length;
+
+
+        document.getElementById(
+            "pendingAppointments"
+        ).textContent =
+            pending;
+
+
+        document.getElementById(
+            "completedAppointments"
+        ).textContent =
+            completed;
+
+
+        if (!appointments.length) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="7"
+                        class="empty-message">
+
+                        No appointments found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        table.innerHTML =
+            appointments.map(
+                appointment => {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${appointment.id}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    appointment.patientName
+                                    || "Unknown"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    appointment.appointmentDate
+                                    || "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    appointment.appointmentTime
+                                    || "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    appointment.appointmentType
+                                    || "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${getStatusBadge(
+                                    appointment.status
+                                )}
+                            </td>
+
+                            <td>
+
+                                ${getAppointmentActions(
+                                    appointment
+                                )}
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            ).join("");
+
+
+        loadPatientCount();
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="7"
+                    class="empty-message">
+
+                    Failed to load appointments.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   APPOINTMENT STATUS BUTTONS
+===================================================== */
+
+function getAppointmentActions(
+    appointment
+) {
+
+    const status =
+        String(
+            appointment.status || ""
+        ).toUpperCase();
+
+
+    if (status === "PENDING") {
+
+        return `
+
+            <div class="action-buttons">
+
+                <button
+                    class="action-btn confirm-btn"
+                    onclick="updateAppointmentStatus(
+                        ${appointment.id},
+                        'CONFIRMED'
+                    )"
+                >
+                    Confirm
+                </button>
+
+
+                <button
+                    class="action-btn reject-btn"
+                    onclick="updateAppointmentStatus(
+                        ${appointment.id},
+                        'REJECTED'
+                    )"
+                >
+                    Reject
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    if (status === "CONFIRMED") {
+
+        return `
+
+            <div class="action-buttons">
+
+                <button
+                    class="action-btn complete-btn"
+                    onclick="updateAppointmentStatus(
+                        ${appointment.id},
+                        'COMPLETED'
+                    )"
+                >
+                    Complete
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    if (status === "COMPLETED") {
+
+        return `
+            <span>Completed</span>
+        `;
+
+    }
+
+
+    if (status === "REJECTED") {
+
+        return `
+            <span>Rejected</span>
+        `;
+
+    }
+
+
+    if (status === "CANCELLED") {
+
+        return `
+            <span>Cancelled</span>
+        `;
+
+    }
+
+
+    return `
+        <span>-</span>
+    `;
+
+}
+
+
+/* =====================================================
+   UPDATE APPOINTMENT STATUS
+===================================================== */
+
+async function updateAppointmentStatus(
+    appointmentId,
+    newStatus
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/appointments/${appointmentId}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Status update failed"
+            );
+
+        }
+
+
+        showMessage(
+            "appointmentMessage",
+            `Appointment ${newStatus.toLowerCase()} successfully.`
+        );
+
+
+        await loadAppointments();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "appointmentMessage",
+            "Unable to update appointment status."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SCHEDULES
+===================================================== */
+
+async function loadSchedules() {
+
+    const table =
+        document.getElementById(
+            "scheduleTable"
+        );
+
+
+    table.innerHTML = `
+
+        <tr>
+
+            <td colspan="6"
+                class="empty-message">
+
+                Loading schedules...
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/schedules`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load schedules"
+            );
+
+        }
+
+
+        const schedules =
+            await response.json();
+
+
+        let doctorSchedules =
+            schedules;
+
+
+        if (currentDoctor) {
+
+            doctorSchedules =
+                schedules.filter(
+                    schedule =>
+                        Number(schedule.doctorId)
+                        ===
+                        Number(currentDoctor.id)
+                );
+
+        }
+
+
+        if (!doctorSchedules.length) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6"
+                        class="empty-message">
+
+                        No schedules found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        table.innerHTML =
+            doctorSchedules.map(
+                schedule => {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${schedule.id}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    schedule.scheduleDate
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    schedule.startTime
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    schedule.endTime
+                                )}
+                            </td>
+
+                            <td>
+
+                                ${
+                                    schedule.available
+                                    ? getStatusBadge(
+                                        "AVAILABLE"
+                                    )
+                                    : getStatusBadge(
+                                        "NOT AVAILABLE"
+                                    )
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <button
+                                        class="action-btn edit-btn"
+                                        onclick="editSchedule(
+                                            ${schedule.id},
+                                            '${schedule.scheduleDate}',
+                                            '${schedule.startTime}',
+                                            '${schedule.endTime}',
+                                            ${schedule.available}
+                                        )"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    <button
+                                        class="action-btn delete-btn"
+                                        onclick="deleteSchedule(
+                                            ${schedule.id}
+                                        )"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="6"
+                    class="empty-message">
+
+                    Failed to load schedules.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   ADD / EDIT SCHEDULE
+===================================================== */
+
+document.getElementById(
+    "scheduleForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        if (!currentDoctor) {
+
+            showMessage(
+                "scheduleMessage",
+                "Doctor information not available."
+            );
+
+            return;
+
+        }
+
+
+        const scheduleData = {
+
+            doctorId:
+                currentDoctor.id,
+
+            doctorName:
+                currentDoctor.name,
+
+            scheduleDate:
+                document.getElementById(
+                    "scheduleDate"
+                ).value,
+
+            startTime:
+                document.getElementById(
+                    "startTime"
+                ).value,
+
+            endTime:
+                document.getElementById(
+                    "endTime"
+                ).value,
+
+            available:
+                document.getElementById(
+                    "scheduleAvailable"
+                ).value === "true"
+
+        };
+
+
+        try {
+
+            let response;
+
+
+            if (editingScheduleId) {
+
+                response =
+                    await fetch(
+                        `${API}/schedules/${editingScheduleId}`,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    scheduleData
+                                )
+                        }
+                    );
+
+            } else {
+
+                response =
+                    await fetch(
+                        `${API}/schedules`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    scheduleData
+                                )
+                        }
+                    );
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Schedule save failed"
+                );
+
+            }
+
+
+            showMessage(
+                "scheduleMessage",
+                editingScheduleId
+                    ? "Schedule updated successfully."
+                    : "Schedule added successfully."
+            );
+
+
+            resetScheduleForm();
+
+            await loadSchedules();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "scheduleMessage",
+                "Unable to save schedule."
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   EDIT SCHEDULE
+===================================================== */
+
+function editSchedule(
+    id,
+    date,
+    start,
+    end,
+    available
+) {
+
+    editingScheduleId = id;
+
+
+    document.getElementById(
+        "scheduleDate"
+    ).value = date;
+
+
+    document.getElementById(
+        "startTime"
+    ).value = start;
+
+
+    document.getElementById(
+        "endTime"
+    ).value = end;
+
+
+    document.getElementById(
+        "scheduleAvailable"
+    ).value =
+        available ? "true" : "false";
+
+
+    document.getElementById(
+        "scheduleFormTitle"
+    ).textContent =
+        "Edit Schedule";
+
+
+    document.getElementById(
+        "scheduleSubmitBtn"
+    ).textContent =
+        "Update Schedule";
+
+
+    document.getElementById(
+        "cancelScheduleEdit"
+    ).style.display =
+        "inline-block";
+
+}
+
+
+/* =====================================================
+   RESET SCHEDULE FORM
+===================================================== */
+
+function resetScheduleForm() {
+
+    editingScheduleId = null;
+
+    document.getElementById(
+        "scheduleForm"
+    ).reset();
+
+
+    document.getElementById(
+        "scheduleFormTitle"
+    ).textContent =
+        "Add Schedule";
+
+
+    document.getElementById(
+        "scheduleSubmitBtn"
+    ).textContent =
+        "Add Schedule";
+
+
+    document.getElementById(
+        "cancelScheduleEdit"
+    ).style.display =
+        "none";
+
+}
+
+
+document.getElementById(
+    "cancelScheduleEdit"
+).addEventListener(
+    "click",
+    resetScheduleForm
+);
+
+
+/* =====================================================
+   DELETE SCHEDULE
+===================================================== */
+
+async function deleteSchedule(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this schedule?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/schedules/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Delete failed"
+            );
+
+        }
+
+
+        showMessage(
+            "scheduleMessage",
+            "Schedule deleted successfully."
+        );
+
+
+        await loadSchedules();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "scheduleMessage",
+            "Unable to delete schedule."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PATIENTS
+===================================================== */
+
+async function loadPatients() {
+
+    const table =
+        document.getElementById(
+            "patientsTable"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/patients`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load patients"
+            );
+
+        }
+
+
+        const patients =
+            await response.json();
+
+
+        document.getElementById(
+            "totalPatients"
+        ).textContent =
+            patients.length;
+
+
+        if (!patients.length) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="6"
+                        class="empty-message">
+
+                        No patients found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        table.innerHTML =
+            patients.map(
+                patient => {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${patient.id}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    patient.name
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    patient.email
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    patient.phone
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    patient.gender
+                                    || "-"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    patient.bloodGroup
+                                    || "-"
+                                )}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="6"
+                    class="empty-message">
+
+                    Failed to load patients.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   PATIENT COUNT
+===================================================== */
+
+async function loadPatientCount() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/patients`
+            );
+
+
+        if (!response.ok) {
+
+            return;
+
+        }
+
+
+        const patients =
+            await response.json();
+
+
+        document.getElementById(
+            "totalPatients"
+        ).textContent =
+            patients.length;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =====================================================
+   MEDICAL RECORDS
+===================================================== */
+
+async function loadMedicalRecords() {
+
+    const table =
+        document.getElementById(
+            "recordsTable"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/medical-records`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load records"
+            );
+
+        }
+
+
+        const records =
+            await response.json();
+
+
+        if (!records.length) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td colspan="7"
+                        class="empty-message">
+
+                        No medical records found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        table.innerHTML =
+            records.map(
+                record => {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${record.id}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    record.patientName
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    record.recordDate
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    record.diagnosis
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    record.treatment
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    record.prescription
+                                    || "-"
+                                )}
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteMedicalRecord(
+                                        ${record.id}
+                                    )"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="7"
+                    class="empty-message">
+
+                    Failed to load medical records.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE MEDICAL RECORD
+===================================================== */
+
+document.getElementById(
+    "recordForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        if (!currentDoctor) {
+
+            showMessage(
+                "recordMessage",
+                "Doctor information not available."
+            );
+
+            return;
+
+        }
+
+
+        const recordData = {
+
+            patientId:
+                Number(
+                    document.getElementById(
+                        "recordPatientId"
+                    ).value
+                ),
+
+            doctorId:
+                currentDoctor.id,
+
+            patientName:
+                document.getElementById(
+                    "recordPatientName"
+                ).value,
+
+            doctorName:
+                currentDoctor.name,
+
+            recordDate:
+                document.getElementById(
+                    "recordDate"
+                ).value,
+
+            diagnosis:
+                document.getElementById(
+                    "recordDiagnosis"
+                ).value,
+
+            treatment:
+                document.getElementById(
+                    "recordTreatment"
+                ).value,
+
+            prescription:
+                document.getElementById(
+                    "recordPrescription"
+                ).value,
+
+            notes:
+                document.getElementById(
+                    "recordNotes"
+                ).value
+
+        };
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API}/medical-records`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                recordData
+                            )
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Medical record creation failed"
+                );
+
+            }
+
+
+            showMessage(
+                "recordMessage",
+                "Medical record added successfully."
+            );
+
+
+            document.getElementById(
+                "recordForm"
+            ).reset();
+
+
+            await loadMedicalRecords();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "recordMessage",
+                "Unable to create medical record."
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   DELETE MEDICAL RECORD
+===================================================== */
+
+async function deleteMedicalRecord(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this medical record?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/medical-records/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Delete failed"
+            );
+
+        }
+
+
+        showMessage(
+            "recordMessage",
+            "Medical record deleted successfully."
+        );
+
+
+        await loadMedicalRecords();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "recordMessage",
+            "Unable to delete medical record."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+async function loadProfile() {
+
+    if (!currentDoctor) {
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        currentDoctor.name;
+
+
+    document.getElementById(
+        "profileEmail"
+    ).textContent =
+        currentDoctor.email;
+
+
+    document.getElementById(
+        "profilePhone"
+    ).textContent =
+        currentDoctor.phone || "-";
+
+
+    document.getElementById(
+        "profileSpecialization"
+    ).textContent =
+        currentDoctor.specialization || "-";
+
+
+    document.getElementById(
+        "profileQualification"
+    ).textContent =
+        currentDoctor.qualification || "-";
+
+
+    document.getElementById(
+        "profileExperience"
+    ).textContent =
+        `${currentDoctor.experience || 0} years`;
+
+
+    document.getElementById(
+        "profileAvailability"
+    ).textContent =
+        currentDoctor.available
+        ? "Available"
+        : "Not Available";
+
+}
+
+
+/* =====================================================
+   STATUS BADGE
+===================================================== */
+
+function getStatusBadge(status) {
+
+    const value =
+        String(status || "")
+        .toUpperCase();
+
+
+    let className =
+        "status";
+
+
+    if (value === "PENDING") {
+
+        className +=
+            " status-pending";
+
+    }
+
+    else if (
+        value === "CONFIRMED"
+        ||
+        value === "AVAILABLE"
+    ) {
+
+        className +=
+            " status-confirmed";
+
+    }
+
+    else if (
+        value === "COMPLETED"
+        ||
+        value === "AVAILABLE"
+    ) {
+
+        className +=
+            " status-completed";
+
+    }
+
+    else if (value === "REJECTED") {
+
+        className +=
+            " status-rejected";
+
+    }
+
+    else {
+
+        className +=
+            " status-cancelled";
+
+    }
+
+
+    return `
+
+        <span class="${className}">
+
+            ${escapeHtml(value)}
+
+        </span>
+
+    `;
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+    elementId,
+    text
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.textContent =
+        text;
+
+
+    element.style.display =
+        "block";
+
+
+    setTimeout(
+        () => {
+
+            element.style.display =
+                "none";
+
+        },
+        3000
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+document.getElementById(
+    "logoutBtn"
+).addEventListener(
+    "click",
+    function(event) {
+
+        event.preventDefault();
+
+        localStorage.removeItem(
+            "loggedInUser"
+        );
+
+        window.location.href =
+            "login.html";
+
+    }
+);
+
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+async function initializeDoctorDashboard() {
+
+    if (!loadLoggedInUser()) {
+
+        return;
+
+    }
+
+
+    setupNavigation();
+
+    await loadDoctor();
+
+    await loadAppointments();
+
+    await loadPatients();
+
+    await loadSchedules();
+
+    await loadMedicalRecords();
+
+    await loadProfile();
+
+}
+
+
+initializeDoctorDashboard();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - MediCare</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f4f7fb;
+        }
+
+        .header {
+            height: 90px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .logo span {
+            color: #2563eb;
+        }
+
+        .home-btn {
+            text-decoration: none;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .home-btn:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            min-height: calc(100vh - 90px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            padding: 35px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2563eb;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .message {
+            display: none;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        .password-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .password-box {
+            position: relative;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 12px;
+            top: 42px;
+            border: none;
+            background: none;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 18px 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .checkbox-row input {
+            width: auto;
+        }
+
+        .checkbox-row a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .register-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .register-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .login-text {
+            text-align: center;
+            margin-top: 22px;
+            color: #64748b;
+        }
+
+        .login-text a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 0 20px;
+            }
+
+            .register-box {
+                padding: 25px 20px;
+            }
+
+            .password-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        🏥 <span>MediCare</span>
+    </div>
+
+    <a href="index.html" class="home-btn">
+        Home
+    </a>
+
+</header>
+
+
+<main class="main">
+
+    <div class="register-box">
+
+        <h1 class="title">
+            Create Account
+        </h1>
+
+        <p class="subtitle">
+            Healthcare Management System
+        </p>
+
+
+        <div id="message" class="message"></div>
+
+
+        <form id="registerForm">
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="role">
+                    Account Type
+                </label>
+
+                <select id="role" required>
+
+                    <option value="">
+                        Select Account Type
+                    </option>
+
+                    <option value="PATIENT">
+                        Patient
+                    </option>
+
+                    <option value="DOCTOR">
+                        Doctor
+                    </option>
+
+                    <option value="ADMIN">
+                        Admin
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="password-row">
+
+                <div class="form-group password-box">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        onclick="togglePassword('password', this)"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+
+                <div class="form-group password-box">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        onclick="togglePassword('confirmPassword', this)"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="checkbox-row">
+
+                <input
+                    type="checkbox"
+                    id="terms"
+                    required
+                >
+
+                <label for="terms">
+                    I agree to the
+                    <a href="#">
+                        Terms & Conditions
+                    </a>
+                    and
+                    <a href="#">
+                        Privacy Policy
+                    </a>.
+                </label>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="register-btn"
+                id="registerButton"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <p class="login-text">
+
+            Already have an account?
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </p>
+
+
+        <a
+            href="index.html"
+            class="back-home"
+        >
+            ← Back to Home
+        </a>
+
+    </div>
+
+</main>
+
+
+<script>
+
+    const API_URL = "http://localhost:8080/api/users";
+
+
+    function togglePassword(inputId, button) {
+
+        const input = document.getElementById(inputId);
+
+        if (input.type === "password") {
+
+            input.type = "text";
+            button.textContent = "Hide";
+
+        } else {
+
+            input.type = "password";
+            button.textContent = "Show";
+
+        }
+    }
+
+
+    function showMessage(message, type) {
+
+        const messageBox =
+            document.getElementById("message");
+
+        messageBox.textContent = message;
+
+        messageBox.className =
+            "message " + type;
+    }
+
+
+    document
+        .getElementById("registerForm")
+        .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById("name")
+                    .value
+                    .trim();
+
+            const email =
+                document.getElementById("email")
+                    .value
+                    .trim();
+
+            const role =
+                document.getElementById("role")
+                    .value;
+
+            const password =
+                document.getElementById("password")
+                    .value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword")
+                    .value;
+
+            const terms =
+                document.getElementById("terms")
+                    .checked;
+
+            const registerButton =
+                document.getElementById("registerButton");
+
+
+            if (!name || !email || !role ||
+                !password || !confirmPassword) {
+
+                showMessage(
+                    "Please fill all fields.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showMessage(
+                    "Passwords do not match.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (password.length < 6) {
+
+                showMessage(
+                    "Password must contain at least 6 characters.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!terms) {
+
+                showMessage(
+                    "Please accept the Terms & Conditions.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            registerButton.disabled = true;
+            registerButton.textContent =
+                "Creating Account...";
+
+
+            try {
+
+                const response =
+                    await fetch(API_URL, {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            name: name,
+                            email: email,
+                            password: password,
+                            role: role
+
+                        })
+
+                    });
+
+
+                if (response.ok) {
+
+                    const user =
+                        await response.json();
+
+
+                    showMessage(
+                        "Account created successfully! Redirecting to login...",
+                        "success"
+                    );
+
+
+                    document
+                        .getElementById("registerForm")
+                        .reset();
+
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "login.html";
+
+                    }, 1500);
+
+
+                } else {
+
+                    let errorMessage =
+                        "Registration failed.";
+
+                    try {
+
+                        const errorData =
+                            await response.text();
+
+                        if (errorData) {
+
+                            errorMessage =
+                                errorData;
+
+                        }
+
+                    } catch (error) {
+
+                        console.log(error);
+
+                    }
+
+
+                    showMessage(
+                        errorMessage,
+                        "error"
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Registration error:",
+                    error
+                );
+
+                showMessage(
+                    "Cannot connect to backend. Make sure Spring Boot is running on port 8080.",
+                    "error"
+                );
+
+            } finally {
+
+                registerButton.disabled = false;
+
+                registerButton.textContent =
+                    "Create Account";
+
+            }
+
+        });
+
+</script>
+
+</body>
+</html>
