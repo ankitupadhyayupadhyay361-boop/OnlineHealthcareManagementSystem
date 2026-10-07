@@ -88,14 +88,28 @@ public class UserController {
         return userService.getUserById(id)
                 .map(existingUser -> {
 
-                    existingUser.setName(user.getName());
-                    existingUser.setEmail(user.getEmail());
-                    existingUser.setRole(user.getRole());
+                    // Update name only if provided
+                    if (user.getName() != null) {
+                        existingUser.setName(
+                                user.getName()
+                        );
+                    }
 
-                    /*
-                     * Password tabhi update hoga
-                     * jab new password diya gaya ho.
-                     */
+                    // Update email only if provided
+                    if (user.getEmail() != null) {
+                        existingUser.setEmail(
+                                user.getEmail()
+                        );
+                    }
+
+                    // Update role only if provided
+                    if (user.getRole() != null) {
+                        existingUser.setRole(
+                                user.getRole()
+                        );
+                    }
+
+                    // Update password only if provided
                     if (user.getPassword() != null
                             && !user.getPassword().isBlank()) {
 
@@ -105,7 +119,9 @@ public class UserController {
                     }
 
                     return ResponseEntity.ok(
-                            userService.saveUser(existingUser)
+                            userService.saveUser(
+                                    existingUser
+                            )
                     );
                 })
                 .orElse(ResponseEntity.notFound().build());

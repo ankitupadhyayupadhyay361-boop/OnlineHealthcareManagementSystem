@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Login - MediCare</title>
@@ -157,6 +160,7 @@
         }
 
     </style>
+
 </head>
 
 <body>
@@ -234,7 +238,9 @@
                     class="login-button"
                     id="loginButton"
                 >
+
                     Login
+
                 </button>
 
             </form>
@@ -268,6 +274,13 @@
 
 <script>
 
+    /*
+     * LOCALHOST BACKEND
+     *
+     * Spring Boot backend:
+     * http://localhost:8080
+     */
+
     const API_URL =
         "http://localhost:8080/api/users/login";
 
@@ -275,8 +288,10 @@
     const loginForm =
         document.getElementById("loginForm");
 
+
     const loginButton =
         document.getElementById("loginButton");
+
 
     const message =
         document.getElementById("message");
@@ -332,13 +347,18 @@
                         method: "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
                         body: JSON.stringify({
+
                             email: email,
+
                             password: password
+
                         })
 
                     });
@@ -367,6 +387,7 @@
                  * User information browser
                  * ke localStorage me save karenge.
                  */
+
                 localStorage.setItem(
                     "loggedInUser",
                     JSON.stringify(user)
@@ -402,6 +423,7 @@
                  * Isse ADMIN / admin / Admin
                  * tino properly work karenge.
                  */
+
                 const role =
                     String(user.role || "")
                         .trim()
@@ -478,10 +500,10 @@
             }
 
         }
-
     );
 
 </script>
 
 </body>
+
 </html>
