@@ -1,23 +1,18 @@
-# VS Code
+# Maven
+backend/target/
+*.class
+
+# IDE
+.idea/
 .vscode/
+*.iml
 
 # macOS
 .DS_Store
 
-# Java / Maven
-backend/target/
-*.class
-
 # Logs
 *.log
 
-# IDE files
-.idea/
-*.iml
-
 # Environment / secrets
 .env
-application-local.properties
-
-# Temporary files
-*.tmp
+.env.*
